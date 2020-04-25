@@ -1,3 +1,5 @@
+import Snake from './snake'
+
 export default class Game {
   constructor() {
     this.canvas = document.getElementById('canvas');
@@ -9,14 +11,13 @@ export default class Game {
     this.canvas.width = this.gridSize.x * this.tileSize;
     this.canvas.height = this.gridSize.y * this.tileSize;
 
-    this.position = {
+    this.startPosition = {
       x: Math.random() * this.gridSize.x,
       y: Math.random() * this.gridSize.y
     };
-    this.dv = {
-      x: 0,
-      y: 0
-    };
+
+    this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
+    this.snake.addCell();
 
     window.addEventListener('keypress', this.handleKeyPress.bind(this));
 
@@ -24,33 +25,31 @@ export default class Game {
   }
 
   handleKeyPress(event) {
-    if (event.key === 'w' && this.dv.y === 0) {
-      this.dv.x = 0;
-      this.dv.y = -1;
+    if (event.key === 'w' && this.snake.dv.y === 0) {
+      this.snake.dv.x = 0;
+      this.snake.dv.y = -1;
     }
-    if (event.key === 's' && this.dv.y === 0) {
-      this.dv.x = 0;
-      this.dv.y = 1;
+    if (event.key === 's' && this.snake.dv.y === 0) {
+      this.snake.dv.x = 0;
+      this.snake.dv.y = 1;
     }
-    if (event.key === 'a' && this.dv.x === 0) {
-      this.dv.x = -1;
-      this.dv.y = 0;
+    if (event.key === 'a' && this.snake.dv.x === 0) {
+      this.snake.dv.x = -1;
+      this.snake.dv.y = 0;
     }
-    if (event.key === 'd' && this.dv.x === 0) {
-      this.dv.x = 1;
-      this.dv.y = 0;
+    if (event.key === 'd' && this.snake.dv.x === 0) {
+      this.snake.dv.x = 1;
+      this.snake.dv.y = 0;
     }
   }
 
   update() {
-    this.position.x += this.dv.x;
-    this.position.y += this.dv.y;
+    this.snake.update();
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = "#FF0000";
-    this.ctx.fillRect(this.position.x * this.tileSize, this.position.y * this.tileSize, this.tileSize, this.tileSize);
+    this.snake.draw();
   }
 
   run() {
