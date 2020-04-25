@@ -18,6 +18,7 @@ export default class Game {
 
     this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
     this.snake.addCell();
+    this.snake.addCell();
 
     window.addEventListener('keypress', this.handleKeyPress.bind(this));
 

@@ -13,6 +13,11 @@ export default class Snake {
   }
 
   update() {
+    if (this.cells.length) {
+      this.cells.pop();
+      this.addCell();
+    }
+
     this.position.x += this.dv.x;
     this.position.y += this.dv.y;
   }
@@ -26,6 +31,6 @@ export default class Snake {
   }
 
   addCell() {
-    this.cells.push({x: this.position.x, y: this.position.y});
+    this.cells.unshift({x: this.position.x, y: this.position.y});
   }
 }
