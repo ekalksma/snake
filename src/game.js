@@ -12,8 +12,8 @@ export default class Game {
     this.canvas.height = this.gridSize.y * this.tileSize;
 
     this.startPosition = {
-      x: Math.random() * this.gridSize.x,
-      y: Math.random() * this.gridSize.y
+      x: Math.floor(Math.random() * this.gridSize.x),
+      y: Math.floor(Math.random() * this.gridSize.y)
     };
 
     this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
@@ -45,11 +45,27 @@ export default class Game {
 
   update() {
     this.snake.update();
+
+    if (this.snake.position.x > this.canvas.width / this.tileSize - 1) {
+      this.snake.position.x = 0;
+    }
+
+    if (this.snake.position.x < 0) {
+      this.snake.position.x = this.canvas.width / this.tileSize - 1;
+    }
+
+    if (this.snake.position.y < 0) {
+      this.snake.position.y = this.canvas.height / this.tileSize - 1;
+    }
+
+    if (this.snake.position.y > this.canvas.height / this.tileSize  - 1) {
+      this.snake.position.y = 0;
+    }
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.snake.draw();
+    this.snake.draw(this.tileSize);
   }
 
   run() {

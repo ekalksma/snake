@@ -1,7 +1,6 @@
 export default class Snake {
   constructor(pos, tileSize, ctx) {
     this.position = pos;
-    this.tileSize = tileSize;
     this.cells = [];
 
     this.ctx = ctx;
@@ -10,7 +9,7 @@ export default class Snake {
     this.dv = {
       x: 0,
       y: 0
-    };
+    }
   }
 
   update() {
@@ -18,15 +17,15 @@ export default class Snake {
     this.position.y += this.dv.y;
   }
 
-  draw() {
-    this.ctx.fillRect(this.position.x * this.tileSize, this.position.y * this.tileSize, this.tileSize, this.tileSize);
+  draw(tileSize) {
+    this.ctx.fillRect(this.position.x * tileSize, this.position.y * tileSize, tileSize, tileSize);
 
     for (const cell of this.cells) {
-      this.ctx.fillRect(cell.x * this.tileSize, cell.y * this.tileSize, this.tileSize, this.tileSize);
+      this.ctx.fillRect(cell.x * tileSize, cell.y * tileSize, tileSize, tileSize);
     }
   }
 
   addCell() {
-    this.cells.push({x: this.position.x, y:this.position.y});
+    this.cells.push({x: this.position.x, y: this.position.y});
   }
 }
