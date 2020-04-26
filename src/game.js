@@ -54,20 +54,8 @@ export default class Game {
 
     this.snake.update();
 
-    if (this.snake.position.x > this.canvas.width / this.tileSize - 1) {
-      this.snake.position.x = 0;
-    }
-
-    if (this.snake.position.x < 0) {
-      this.snake.position.x = this.canvas.width / this.tileSize - 1;
-    }
-
-    if (this.snake.position.y < 0) {
-      this.snake.position.y = this.canvas.height / this.tileSize - 1;
-    }
-
-    if (this.snake.position.y > this.canvas.height / this.tileSize  - 1) {
-      this.snake.position.y = 0;
+    if (this.IsOutOfBounds()) {
+      this.gameOver = true;
     }
 
     if (this.isSnakeCollidingWithApple()) {
@@ -95,6 +83,13 @@ export default class Game {
     this.draw();
 
     window.requestAnimationFrame(this.loop.bind(this));
+  }
+
+  IsOutOfBounds() {
+    return this.snake.position.x > this.canvas.width / this.tileSize - 1   ||
+           this.snake.position.y > this.canvas.height / this.tileSize  - 1 ||
+           this.snake.position.x < 0 ||
+           this.snake.position.y < 0 ;
   }
 
   isSnakeCollidingWithSelf() {

@@ -10,6 +10,7 @@ export default class Snake {
       x: 1,
       y: 0
     }
+
     this.createDefaultSnake();
   }
 
