@@ -1,10 +1,10 @@
 export default class Snake {
   constructor(pos, tileSize, ctx) {
     this.position = pos;
+    this.extend = false;
     this.cells = [];
 
     this.ctx = ctx;
-    this.ctx.fillStyle = "#FF0000";
 
     this.dv = {
       x: 0,
@@ -14,15 +14,18 @@ export default class Snake {
 
   update() {
     if (this.cells.length) {
-      this.cells.pop();
       this.addCell();
+      if (!this.extend) this.cells.pop();
     }
+
+    this.extend = false;
 
     this.position.x += this.dv.x;
     this.position.y += this.dv.y;
   }
 
   draw(tileSize) {
+    this.ctx.fillStyle = "#FF0000";
     this.ctx.fillRect(this.position.x * tileSize, this.position.y * tileSize, tileSize, tileSize);
 
     for (const cell of this.cells) {
@@ -31,6 +34,6 @@ export default class Snake {
   }
 
   addCell() {
-    this.cells.unshift({x: this.position.x, y: this.position.y});
+    this.cells.unshift({ x: this.position.x, y: this.position.y});
   }
 }

@@ -16,13 +16,18 @@ export default class Game {
       y: Math.floor(Math.random() * this.gridSize.y)
     };
 
+    this.apple = {
+      x: Math.floor(Math.random() * this.gridSize.x),
+      y: Math.floor(Math.random() * this.gridSize.y)
+    };
+
     this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
     this.snake.addCell();
     this.snake.addCell();
 
     window.addEventListener('keypress', this.handleKeyPress.bind(this));
 
-    setInterval(this.update.bind(this), 500);
+    setInterval(this.update.bind(this), 250);
   }
 
   handleKeyPress(event) {
@@ -62,11 +67,17 @@ export default class Game {
     if (this.snake.position.y > this.canvas.height / this.tileSize  - 1) {
       this.snake.position.y = 0;
     }
+
+    if (this.snake.position.x === this.apple.x && this.snake.position.y === this.apple.y) {
+      this.respawnApple();
+      this.snake.extend = true;
+    }
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.snake.draw(this.tileSize);
+    this.drawApple();
   }
 
   run() {
@@ -78,4 +89,25 @@ export default class Game {
 
     window.requestAnimationFrame(this.loop.bind(this));
   }
+
+  drawApple() {
+    this.ctx.fillStyle = "#7CFC00";
+    this.ctx.fillRect(this.apple.x * this.tileSize, this.apple.y * this.tileSize, this.tileSize, this.tileSize);
+  }
+
+  respawnApple() {
+    this.apple.x = Math.floor(Math.random() * this.gridSize.x);
+    this.apple.y = Math.floor(Math.random() * this.gridSize.y);
+
+    if (this.snake.position.x === this.apple.x && this.snake.position.y === this.apple.y) {
+      this.respawnApple();
+    }
+
+    for (const cell of this.snake.cells) {
+      if (cell.x === this.apple.x && cell.y === this.apple.y) {
+        this.respawnApple();
+      }
+    }
+  }
+
 }
