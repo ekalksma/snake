@@ -3,10 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
   <title>snake</title>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <div id="container">
+    <div class="center">
+      <div id="playerScore"></div>
+      <div id="startOverlay" class="overlay">
+        <div class="center">
+          <h2>To start WASD</h2>
+        </div>
+      </div>
+      <div id="gameOver-Overlay" class="overlay">
+        <div class="center">
+          <h2>Your Score: </h2>
+        </div>
+      </div>
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>

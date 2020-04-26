@@ -27,7 +27,7 @@ export default class Snake {
   }
 
   draw(tileSize) {
-    this.ctx.fillStyle = "#FF0000";
+    this.ctx.fillStyle = "#FFFFFF";
     this.ctx.fillRect(this.position.x * tileSize, this.position.y * tileSize, tileSize, tileSize);
 
     for (const cell of this.cells) {
