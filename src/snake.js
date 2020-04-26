@@ -7,9 +7,10 @@ export default class Snake {
     this.ctx = ctx;
 
     this.dv = {
-      x: 0,
+      x: 1,
       y: 0
     }
+    this.createDefaultSnake();
   }
 
   update() {
@@ -35,5 +36,10 @@ export default class Snake {
 
   addCell() {
     this.cells.unshift({ x: this.position.x, y: this.position.y});
+  }
+
+  createDefaultSnake() {
+    this.cells.push({ x: this.position.x - 1, y: this.position.y })
+    this.cells.push({ x: this.position.x - 2, y: this.position.y })
   }
 }

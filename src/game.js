@@ -5,6 +5,8 @@ export default class Game {
     this.canvas = document.getElementById('canvas');
     this.ctx = this.canvas.getContext('2d');
 
+    this.gameOver = false;
+
     this.tileSize = 8;
     this.gridSize = {x: 20, y: 20};
 
@@ -12,7 +14,7 @@ export default class Game {
     this.canvas.height = this.gridSize.y * this.tileSize;
 
     this.startPosition = {
-      x: Math.floor(Math.random() * this.gridSize.x),
+      x: this.getRandomInt(3, this.gridSize.x),
       y: Math.floor(Math.random() * this.gridSize.y)
     };
 
@@ -22,8 +24,6 @@ export default class Game {
     };
 
     this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
-    this.snake.addCell();
-    this.snake.addCell();
 
     window.addEventListener('keypress', this.handleKeyPress.bind(this));
 
@@ -50,6 +50,8 @@ export default class Game {
   }
 
   update() {
+    if(this.gameOver) return;
+
     this.snake.update();
 
     if (this.snake.position.x > this.canvas.width / this.tileSize - 1) {
@@ -68,10 +70,15 @@ export default class Game {
       this.snake.position.y = 0;
     }
 
-    if (this.snake.position.x === this.apple.x && this.snake.position.y === this.apple.y) {
+    if (this.isSnakeCollidingWithApple()) {
       this.respawnApple();
       this.snake.extend = true;
     }
+
+    if (this.isSnakeCollidingWithSelf()) {
+      this.gameOver = true;
+    }
+
   }
 
   draw() {
@@ -88,6 +95,26 @@ export default class Game {
     this.draw();
 
     window.requestAnimationFrame(this.loop.bind(this));
+  }
+
+  isSnakeCollidingWithSelf() {
+    for (const cell of this.snake.cells) {
+      if (cell.x === this.snake.position.x && cell.y === this.snake.position.y) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  isSnakeCollidingWithApple() {
+    return this.snake.position.x === this.apple.x && this.snake.position.y === this.apple.y;
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 
   drawApple() {
