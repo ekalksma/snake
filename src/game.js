@@ -2,21 +2,17 @@ import Snake from './snake'
 
 export default class Game {
   constructor() {
-    this.canvas = document.getElementById('canvas');
+    this.canvas = document.getElementById('snake-grid');
     this.ctx = this.canvas.getContext('2d');
 
     this.domElements = {
-      startOverlay: document.getElementById('startOverlay'),
-      playerScore: document.getElementById('playerScore'),
-      gameOverlay: document.getElementById('gameOver-Overlay'),
-      winText: document.querySelector('#winOverlay > .center h2')
+      playerScore: document.getElementById('snake-score'),
+      startOverlay: document.getElementById('snake-start-screen'),
+      gameOverlay: document.getElementById('snake-game-over-screen')
     }
 
     this.hideDomElement(this.domElements.gameOverlay);
-    this.hideDomElement(this.domElements.startOverlay);
 
-    this.gameOver = false;
-    this.isReadyForInput = true;
 
     this.tileSize = 8;
     this.gridSize = {x: 62, y: 37};
@@ -24,18 +20,7 @@ export default class Game {
     this.canvas.width = this.gridSize.x * this.tileSize;
     this.canvas.height = this.gridSize.y * this.tileSize;
 
-    this.startPosition = {
-      x: Math.floor(Math.random() * (Math.floor(this.gridSize.x) - Math.ceil(3)) + 3),
-      y: Math.floor(Math.random() * this.gridSize.y - 1)
-    };
-
-    this.apple = {};
-
-    const applePosition = this.getRandomPosition();
-    this.apple.x = applePosition.x;
-    this.apple.y = applePosition.y;
-
-    this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
+    this.reset();
 
     window.addEventListener('keypress', this.handleKeyPress.bind(this));
 
@@ -45,6 +30,11 @@ export default class Game {
   handleKeyPress(event) {
     if (!this.isReadyForInput) {
       return;
+    }
+
+    if (this.gameOver) {
+      this.gameOver = false;
+      this.hideDomElement(this.domElements.startOverlay);
     }
 
     if (event.key === 'w' && this.snake.dv.y === 0) {
@@ -79,16 +69,18 @@ export default class Game {
     this.snake.update();
 
     if (this.IsOutOfBounds()) {
-      this.gameOver = true;
+      this.handleGameOver();
     }
 
     if (this.isSnakeCollidingWithApple()) {
       this.respawnApple();
       this.snake.extend = true;
+      this.score++;
+      this.updateDomElement(this.domElements.playerScore, `Score: ${this.score}`);
     }
 
     if (this.isSnakeCollidingWithSelf()) {
-      this.gameOver = true;
+      this.handleGameOver();
     }
 
     this.keyPressed = false;
@@ -108,6 +100,40 @@ export default class Game {
     this.draw();
 
     window.requestAnimationFrame(this.loop.bind(this));
+  }
+
+  reset() {
+    this.showDomElement(this.domElements.startOverlay);
+
+    this.startPosition = {
+      x: Math.floor(Math.random() * (Math.floor(this.gridSize.x) - Math.ceil(3)) + 3),
+      y: Math.floor(Math.random() * this.gridSize.y - 1)
+    };
+
+    this.snake = new Snake(this.startPosition, this.tileSize, this.ctx);
+
+    this.apple = {};
+    const applePosition = this.getRandomPosition();
+    this.apple.x = applePosition.x;
+    this.apple.y = applePosition.y;
+
+    this.score = 0;
+    this.gameOver = true;
+    this.isReadyForInput = true;
+
+    this.updateDomElement(this.domElements.playerScore, `Score: ${this.score}`);
+  }
+
+  handleGameOver() {
+    this.showDomElement(this.domElements.gameOverlay);
+    this.isReadyForInput = false;
+    this.gameOver = true;
+
+    setTimeout( () => {
+      this.isReadyForInput = true;
+      this.hideDomElement(this.domElements.gameOverlay);
+      this.reset();
+    }, 3000)
   }
 
   IsOutOfBounds() {
@@ -160,10 +186,14 @@ export default class Game {
     element.style.display = 'none';
   }
 
+  updateDomElement(element, text) {
+    element.innerText = text;
+  }
+
   getRandomPosition() {
     return {
-      x: Math.floor(Math.random() * this.gridSize.x - 1),
-      y: Math.floor(Math.random() * this.gridSize.y - 1)
+      x: Math.floor(Math.random() * this.gridSize.x),
+      y: Math.floor(Math.random() * this.gridSize.y)
     }
   }
 

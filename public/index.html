@@ -7,22 +7,24 @@
   <title>snake</title>
 </head>
 <body>
-  <div id="container">
-    <div class="center">
-      <div id="playerScore"></div>
-      <div id="startOverlay" class="overlay">
-        <div class="center">
-          <h2>To start WASD</h2>
-        </div>
+  <div class="snake-wrapper">
+    <div class="snake">
+      <div id="snake-score">
+        Score: 0
       </div>
-      <div id="gameOver-Overlay" class="overlay">
-        <div class="center">
-          <h2>Your Score: </h2>
-        </div>
+
+      <div id="snake-start-screen">
+        Press any key to start
       </div>
-      <canvas id="canvas"></canvas>
+
+      <div id="snake-game-over-screen">
+        Game Over
+      </div>
+
+      <canvas id="snake-grid"></canvas>
     </div>
   </div>
+
   <script src="main.js"></script>
 </body>
 </html>
