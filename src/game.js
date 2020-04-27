@@ -125,6 +125,7 @@ export default class Game {
   }
 
   handleGameOver() {
+    this.updateDomElement(this.domElements.gameOverlay, `Your Score: ${this.score}`);
     this.showDomElement(this.domElements.gameOverlay);
     this.isReadyForInput = false;
     this.gameOver = true;
